@@ -1,0 +1,49 @@
+#This is the metadynamics CV file
+
+#CV1 alpha helix 1-10
+ALPHARMSD RESIDUES=1-10 TYPE=DRMSD LESS_THAN={RATIONAL R_0=0.08 NN=8 MM=12} LABEL=helix1
+
+#CV2 alpha helix 11-18 
+ALPHARMSD RESIDUES=11-18 TYPE=DRMSD LESS_THAN={RATIONAL R_0=0.08 NN=8 MM=12} LABEL=helix2
+
+#CV3 alpha helix 19-24 (kink) 
+ALPHARMSD RESIDUES=19-24 TYPE=DRMSD LESS_THAN={RATIONAL R_0=0.08 NN=8 MM=12} LABEL=helix3
+
+#CV4 alpha helix 25-31 (kink)
+ALPHARMSD RESIDUES=25-31 TYPE=DRMSD LESS_THAN={RATIONAL R_0=0.08 NN=8 MM=12} LABEL=helix4
+
+#CV5 alpha helix 32-40 
+ALPHARMSD RESIDUES=32-40 TYPE=DRMSD LESS_THAN={RATIONAL R_0=0.08 NN=8 MM=12} LABEL=helix5
+
+#CV6 alpha helix 41-50
+ALPHARMSD RESIDUES=41-50 TYPE=DRMSD LESS_THAN={RATIONAL R_0=0.08 NN=8 MM=12} LABEL=helix6
+
+#CV7 alpha helix 51-61
+ALPHARMSD RESIDUES=51-61 TYPE=DRMSD LESS_THAN={RATIONAL R_0=0.08 NN=8 MM=12} LABEL=helix7
+
+#CV8 proline isomerisation - improper dihedral angle zeta (Calpha(before pro)-O1-Cdelta-Calpha)
+zeta: TORSION ATOMS=947,961,963,972 NOPBC
+
+#CV9 proline isomerisation - torsional angle psi (N1-Calpha-C-N)
+psi: TORSION ATOMS=962,972,974,976 NOPBC 
+
+#CV10 sum parallel and anti-parallel beta-content
+PARABETARMSD RESIDUES=1-61 TYPE=DRMSD LESS_THAN={RATIONAL R_0=0.08 NN=8 MM=12} LABEL=par
+ANTIBETARMSD RESIDUES=1-61 TYPE=DRMSD LESS_THAN={RATIONAL R_0=0.08 NN=8 MM=12} LABEL=anti
+COMBINE ARG=par.lessthan,anti.lessthan PERIODIC=NO LABEL=beta
+
+#CV11 the end to end distance for the kink calculated using the Calpha carbon atom of residue ILE18 and residue ASP30
+kink: DISTANCE ATOMS=293,512 NOPBC
+
+#CV12 radius of gyration calculated using the Calpha carbon atoms of every residue
+g1: GROUP ATOMS=5,22,42,59,78,94,106,126,143,159,173,192,202,217,236,255,274,293,312,329,353,367,387,409,425,436,455,479,493,512,524,545,564,583,597,616,635,654,676,690,709,720,742,753,772,786,801,815,837,858,869,886,905,917,932,947,972,978,995,1010,1029,
+rgyr: GYRATION ATOMS=g1 NOPBC
+
+#CV13 contacts between hydrophobic residues calculated as the number of Cbeta carbon couples closer than 0.6 nm 
+#hydrophobic res=Phe, Pro, Ala, Leu, Trp, Tyr, Val, Ile, Met, Cys
+COORDINATION GROUPA=7,24,61,80,108,145,175,194,219,238,257,276,295,314,369,411,438,457,495,526,547,566,599,618,637,692,755,839,888,969,980,1012 R_0=0.6 NOPBC NLIST NL_CUTOFF=1.0 NL_STRIDE=20 LABEL=hydro
+
+#CV14 the number of salt-bridges calculated as the number of heavy atoms from the charged group closer than 0.6 nm
+#GROUP A is all the heavy atoms from RCOO- group of aspartic acids (CG, OD1, OD2) and glutamic acids (CD, OE1, OE2)
+#GROUP B is all the heavy atoms from RHN3+ (NZ, HZ1, HZ2, HZ3) from lysines or RNHC(NH2)2+ (CZ,NH1,1HH1,2HH1,NH2,1HH2,2HH2) from arginines 
+COORDINATION GROUPA=99,100,101,210,211,212,517,518,519,794,795,796,910,911,912,925,926,927,940,941,942,1003,1004,1005,1034,1035,1036 GROUPB=342,343,344,345,346,347,348,401,402,403,404,668,669,670,671,734,735,736,737,829,830,831,832 R_0=0.6 NOPBC NLIST NL_CUTOFF=1.0 NL_STRIDE=20 LABEL=salt

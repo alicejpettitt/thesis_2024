@@ -1,0 +1,64 @@
+#this is the master plumed.dat file for metadynamic metainference simulations 
+
+RESTART
+
+# define groups 
+MOLINFO STRUCTURE=../system/template_md.pdb
+prot: GROUP ATOMS=1-339
+WHOLEMOLECULES ENTITY0=prot
+FLUSH STRIDE=1000
+
+#include file with definition of metadynamics CVs
+INCLUDE FILE=../plumed/CVs.dat
+
+#activate parallel bias metadynamics 
+PBMETAD ...
+    ARG=helix.lessthan,beta,rgyr,salt,e2e,dihcor,zeta,psi,hydro
+    HEIGHT=1.2
+    BIASFACTOR=30 #10*SQRT(NUM_OF_CVS)
+    TEMP=310.0
+    SIGMA=0.79,1.10,0.10,2.46,0.47,1.06,0.93,0.84,0.08
+    PACE=500
+    GRID_MIN=-1,-1,-1,-1,-0.1,-1,-pi,-pi,-1
+    GRID_MAX=100,100,20,400,10,50,pi,pi,10
+    GRID_SPACING=0.1,0.1,0.01,0.1,0.1,0.01,0.01,0.01,0.01
+    GRID_WSTRIDE=10000
+    GRID_RFILES=../GRID.helix.lessthan,../GRID.beta,../GRID.rgyr,../GRID.salt,../GRID.e2e,../GRID.dihcor,../GRID.zeta,../GRID.psi,../GRID.hydro
+    GRID_WFILES=../GRID.helix.lessthan,../GRID.beta,../GRID.rgyr,../GRID.salt,../GRID.e2e,../GRID.dihcor,../GRID.zeta,../GRID.psi,../GRID.hydro
+    FILE=../HILLS/helix.lessthan,../HILLS/beta,../HILLS/rgyr,../HILLS/salt,../HILLS/e2e,../HILLS/dihcor,../HILLS/zeta,../HILLS/psi,../HILLS/hydro
+    WALKERS_MPI
+    LABEL=pbmetad
+... PBMETAD
+
+# Metainference - chemical shifts at 310 K 
+
+CS2BACKBONE ...
+    ATOMS=7-339 DATADIR=../data NOPBC TEMPLATE=../data/template_cs.pdb
+    DOSCORE ARG=pbmetad.bias 
+    TEMP=310.0
+    LABEL=cs
+    SIGMA0=9.0 
+    SIGMA_MIN=0.01 
+    SIGMA_MAX=10.00 
+    DSIGMA=0.1 
+    NOISETYPE=MGAUSS REWEIGHT SIGMA_MEAN0=2.0 OPTSIGMAMEAN=SEM_MAX AVERAGING=500 
+    WRITE_STRIDE=2500 
+    STATUS_FILE=../STATUS/MISTATUS.cs
+... CS2BACKBONE
+
+BIASVALUE ARG=cs.score
+
+# Ensemble statistics
+ens: ENSEMBLE ARG=(cs\.ha-.*),(cs\.hn-.*),(cs\.ca-.*),(cs\.cb-.*),pbmetad.bias REWEIGHT
+
+STATS ...
+    ARG=(ens\.cs\.ha-.*),(ens\.cs\.hn-.*),(ens\.cs\.ca-.*),(ens\.cs\.cb-.*)
+    PARARG=(cs\.expha-.*),(cs\.exphn-.*),(cs\.expca-.*),(cs\.expcb-.*)
+    LABEL=stat
+... STATS
+
+#print out relevant info
+PRINT ARG=helix.lessthan,beta,rgyr,salt,e2e,dihcor,zeta,psi,hydro FILE=../COLVAR/COLVAR_PBMETAD STRIDE=500
+PRINT ARG=(ens.*),(stat.*) FILE=STATS STRIDE=500
+PRINT ARG=(cs.*) FILE=../COLVAR/BAYES.cs STRIDE=500
+ENDPLUMED

@@ -1,0 +1,36 @@
+#this is the master plumed.dat file for metadynamic metainference simulations 
+
+RESTART
+
+#include file with definition of metadynamics CVs for rae1-nup98-orf6 complex 
+INCLUDE FILE=../CVs.dat
+
+#include file with definition of metadynamics CVs for orf6 alone 
+INCLUDE FILE=../CVs_orf6.dat
+
+#activate parallel bias metadynamics 
+PBMETAD ...
+    ARG=kink,rgyr,contacts1,contacts2,zeta1,psi1,zeta2,psi2,zeta3,psi3,zeta4,psi4,zeta5,psi5,zeta6,psi6,zeta7,psi7,zeta8,psi8,zeta9,psi9,zeta10,psi10,zeta11,psi11,zeta12,psi12,zeta13,psi13,helix1.lessthan,helix2.lessthan,helix3.lessthan
+    HEIGHT=1.2
+    BIASFACTOR=57 #10*SQRT(NUM_OF_CVS)
+    TEMP=310
+    SIGMA=0.28,0.06,0.38,0.59,1.40,0.38,1.28,0.28,1.41,0.41,1.47,0.18,1.48,0.14,1.10,0.63,1.33,0.19,1.28,0.30,0.76,0.32,1.50,0.26,1.38,0.47,1.38,0.15,1.47,0.32,0.29,0.11,0.19
+    PACE=500
+    GRID_MIN=-1,-1,-1,-1,-pi,-pi,-pi,-pi,-pi,-pi,-pi,-pi,-pi,-pi,-pi,-pi,-pi,-pi,-pi,-pi,-pi,-pi,-pi,-pi,-pi,-pi,-pi,-pi,-pi,-pi,-1,-1,-1
+    GRID_MAX=20,20,200,200,pi,pi,pi,pi,pi,pi,pi,pi,pi,pi,pi,pi,pi,pi,pi,pi,pi,pi,pi,pi,pi,pi,pi,pi,pi,pi,500,500,500
+    GRID_SPACING=0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1
+    GRID_WSTRIDE=10000
+    GRID_RFILES=../GRID.kink,../GRID.rgyr,../GRID.contacts1,../GRID.contacts2,../GRID.zeta1,../GRID.psi1,../GRID.zeta2,../GRID.psi2,../GRID.zeta3,../GRID.psi3,../GRID.zeta4,../GRID.psi4,../GRID.zeta5,../GRID.psi5,../GRID.zeta6,../GRID.psi6,../GRID.zeta7,../GRID.psi7,../GRID.zeta8,../GRID.psi8,../GRID.zeta9,../GRID.psi9,../GRID.zeta10,../GRID.psi10,../GRID.zeta11,../GRID.psi11,../GRID.zeta12,../GRID.psi12,../GRID.zeta13,../GRID.psi13,../GRID.helix1.lessthan,../GRID.helix2.lessthan,../GRID.helix3.lessthan
+    GRID_WFILES=../GRID.kink,../GRID.rgyr,../GRID.contacts1,../GRID.contacts2,../GRID.zeta1,../GRID.psi1,../GRID.zeta2,../GRID.psi2,../GRID.zeta3,../GRID.psi3,../GRID.zeta4,../GRID.psi4,../GRID.zeta5,../GRID.psi5,../GRID.zeta6,../GRID.psi6,../GRID.zeta7,../GRID.psi7,../GRID.zeta8,../GRID.psi8,../GRID.zeta9,../GRID.psi9,../GRID.zeta10,../GRID.psi10,../GRID.zeta11,../GRID.psi11,../GRID.zeta12,../GRID.psi12,../GRID.zeta13,../GRID.psi13,../GRID.helix1.lessthan,../GRID.helix2.lessthan,../GRID.helix3.lessthan
+    FILE=../HILLS/kink,../HILLS/rgyr,../HILLS/contacts1,../HILLS/contacts2,../HILLS/zeta1,../HILLS/psi1,../HILLS/zeta2,../HILLS/psi2,../HILLS/zeta3,../HILLS/psi3,../HILLS/zeta4,../HILLS/psi4,../HILLS/zeta5,../HILLS/psi5,../HILLS/zeta6,../HILLS/psi6,../HILLS/zeta7,../HILLS/psi7,../HILLS/zeta8,../HILLS/psi8,../HILLS/zeta9,../HILLS/psi9,../HILLS/zeta10,../HILLS/psi10,../HILLS/zeta11,../HILLS/psi11,../HILLS/zeta12,../HILLS/psi12,../HILLS/zeta13,../HILLS/psi13,../HILLS/helix1.lessthan,../HILLS/helix2.lessthan,../HILLS/helix3.lessthan
+    WALKERS_MPI
+    LABEL=pbmetad
+... PBMETAD
+
+# with an upper wall at rgyr of 4 nm
+# external potential that limits the rgyr to 4 nm <; 
+uwall: UPPER_WALLS ARG=rgyr AT=4 KAPPA=100.0 EXP=2 EPS=1 OFFSET=0  
+
+#print out relevant info
+PRINT ARG=kink,rgyr,contacts1,contacts2,zeta1,psi1,zeta2,psi2,zeta3,psi3,zeta4,psi4,zeta5,psi5,zeta6,psi6,zeta7,psi7,zeta8,psi8,zeta9,psi9,zeta10,psi10,zeta11,psi11,zeta12,psi12,zeta13,psi13,helix1.lessthan,helix2.lessthan,helix3.lessthan FILE=../COLVAR/COLVAR_PBMETAD STRIDE=500
+ENDPLUMED

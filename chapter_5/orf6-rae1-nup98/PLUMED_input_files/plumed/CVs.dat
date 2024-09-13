@@ -1,0 +1,115 @@
+#This is the metadynamics CV file
+
+# define groups 
+MOLINFO STRUCTURE=../template.pdb
+prot1: GROUP ATOMS=1-5649
+prot2: GROUP ATOMS=5650-6532
+prot3: GROUP ATOMS=6533-7571
+WHOLEMOLECULES ENTITY0=prot1 ENTITY1=prot2 ENTITY2=prot3
+FLUSH STRIDE=1000 
+
+#CV1 the end to end distance for the orf6 kink calculated using the Calpha carbon atom of residue 19 and residue 31
+kink: DISTANCE ATOMS=6844,7056 NOPBC
+
+#CV2 radius of gyration calculated using every 10th Calpha carbon atoms in orf6(g1) rae1(g2) nup98(g3)
+g1: GROUP ATOMS=5,145,264,412,548,685,828,989,1138,1286,1424,1564,1721,1872,2047,2191,2373,2531,2699,2837,3009,3168,3340,3504,3652,3808,3970,4103,4248,4396,4548,4719,4864,5011,5164,5333,5499,5629,5658,5810,5943,6098,6253,6510,6537,6705,6885,7056,7241,7401,7561
+rgyr: GYRATION ATOMS=g1 NOPBC
+
+#CV3 Contacts between residues closer than 0.6 nm using Cbeta carbon atoms as an indicator 
+#Group A Met1-Leu52 orf6
+#Group B top 90 percentile solvent exposed (surface) residues in rae1-nup98 complex (includes polar, charged and hydrophobic residues)
+COORDINATION GROUPA=6539,6556,6576,6593,6612,6628,6640,6660,6677,6693,6707,6726,6736,6751,6770,6789,6808,6827,6846,6863,6887,6901,6921,6943,6959,6970,6989,7013,7027,7046,7058,7079,7098,7117,7131,7150,7169,7188,7210,7224,7243,7254,7276,7287,7306,7320,7335,7349,7371,7392,7403,7420 GROUPB=316,392,526,723,1024,1184,1696,2024,2340,2483,2800,3087,3130,3189,3396,3418,3449,3771,3820,3922,4007,4042,4056,4606,5274,5313,5486,5771,5278,5833,6171,6447 R_0=0.6 NOPBC NLIST NL_CUTOFF=1.0 NL_STRIDE=20 LABEL=contacts1
+
+#CV4 Contacts between polar and charged residues closer than 0.6 nm using Cbeta carbon atoms as an indicator 
+#Group A Met1-Leu52 orf6 
+#Group B Rae1 n-terminal region 
+COORDINATION GROUPA=6576,6628,6660,6693,6736,6863,6887,6921,6959,7013,7046,7117,7188,7210,7243,7254,7276,7306,7320,7335,7349,7392,7403 GROUPB=24,81,95,109,154,168,186,200,255,276,290,304 R_0=0.6 NOPBC NLIST NL_CUTOFF=1.0 NL_STRIDE=20 LABEL=contacts2
+
+#CV5 orf6 PRO57 isomerisation - improper dihedral angle zeta (Calpha(before pro)-O1-Cdelta-Calpha)
+zeta1: TORSION ATOMS=7479,7493,7495,7504 NOPBC
+
+#CV6 orf6 PRO57 isomerisation - torsional angle psi (N1-Calpha-C-N)
+psi1: TORSION ATOMS=7494,7504,7506,7508 NOPBC
+
+#CV7 Rae1 PRO28 isomerisation - improper dihedral angle zeta (Calpha(before pro)-O1-Cdelta-Calpha)
+zeta2: TORSION ATOMS=345,356,358,367 NOPBC
+
+#CV8 Rae1 PRO28 isomerisation - torsional angle psi (N1-Calpha-C-N)
+psi2: TORSION ATOMS=357,367,369,371 NOPBC
+
+#CV9 Rae1 PRO38 isomerisation - improper dihedral angle zeta (Calpha(before pro)-O1-Cdelta-Calpha)
+zeta3: TORSION ATOMS=499,507,509,518 NOPBC
+
+#CV10 Rae1 PRO38 isomerisation - torsional angle psi (N1-Calpha-C-N)
+psi3: TORSION ATOMS=508,518,520,522 NOPBC
+
+#CV11 Rae1 PRO49 isomerisation - improper dihedral angle zeta (Calpha(before pro)-O1-Cdelta-Calpha)
+zeta4: TORSION ATOMS=646,654,656,665 NOPBC
+
+#CV12 Rae1 PRO49 isomerisation - torsional angle psi (N1-Calpha-C-N)
+psi4: TORSION ATOMS=655,665,667,669 NOPBC
+
+#CV13 Rae1 PRO50 isomerisation - improper dihedral angle zeta (Calpha(before pro)-O1-Cdelta-Calpha)
+zeta5: TORSION ATOMS=665,668,670,679 NOPBC
+
+#CV14 Rae1 PRO50 isomerisation - torsional angle psi (N1-Calpha-C-N)
+psi5: TORSION ATOMS=669,679,681,683 NOPBC
+
+#CV15 Rae1 PRO53 isomerisation - improper dihedral angle zeta (Calpha(before pro)-O1-Cdelta-Calpha)
+zeta6: TORSION ATOMS=699,715,717,726 NOPBC
+
+#CV16 Rae1 PRO53 isomerisation - torsional angle psi (N1-Calpha-C-N)
+psi6: TORSION ATOMS=716,726,728,730 NOPBC
+
+#CV17 Rae1 PRO79 isomerisation - improper dihedral angle zeta (Calpha(before pro)-O1-Cdelta-Calpha)
+zeta7: TORSION ATOMS=1083,1099,1101,1110 NOPBC
+
+#CV18 Rae1 PRO79 isomerisation - torsional angle psi (N1-Calpha-C-N)
+psi7: TORSION ATOMS=1100,1110,1112,1114 NOPBC
+
+#CV19 Rae1 PRO270 isomerisation - improper dihedral angle zeta (Calpha(before pro)-O1-Cdelta-Calpha)
+zeta8: TORSION ATOMS=4079,4086,4088,4097 NOPBC
+
+#CV20 Rae1 PRO270 isomerisation - torsional angle psi (N1-Calpha-C-N)
+psi8: TORSION ATOMS=4087,4097,4099,4101 NOPBC
+
+#CV21 Rae1 PRO317 isomerisation - improper dihedral angle zeta (Calpha(before pro)-O1-Cdelta-Calpha)
+zeta9: TORSION ATOMS=4793,4807,4809,4818 NOPBC
+
+#CV22 Rae1 PRO317 isomerisation - torsional angle psi (N1-Calpha-C-N)
+psi9: TORSION ATOMS=4808,4818,4820,4822 NOPBC
+
+#CV23 Rae1 PRO347 isomerisation - improper dihedral angle zeta (Calpha(before pro)-O1-Cdelta-Calpha)
+zeta10: TORSION ATOMS=5244,5255,5257,5266 NOPBC
+
+#CV24 Rae1 PRO347 isomerisation - torsional angle psi (N1-Calpha-C-N)
+psi10: TORSION ATOMS=5256,5266,5268,5270 NOPBC
+
+#CV25 Rae1 PRO364 isomerisation - improper dihedral angle zeta (Calpha(before pro)-O1-Cdelta-Calpha)
+zeta11: TORSION ATOMS=5533,5552,5554,5563 NOPBC
+
+#CV26 Rae1 PRO364 isomerisation - torsional angle psi (N1-Calpha-C-N)
+psi11: TORSION ATOMS=5553,5563,5565,5567 NOPBC
+
+#CV27 NUP98 PRO166 isomerisation - improper dihedral angle zeta (Calpha(before pro)-O1-Cdelta-Calpha)
+zeta12: TORSION ATOMS=5768,5779,5781,5790 NOPBC
+
+#CV28 NUP98 PRO166 isomerisation - torsional angle psi (N1-Calpha-C-N)
+psi12: TORSION ATOMS=5780,5790,5792,5794 NOPBC
+
+#CV29 NUP98 PRO167 isomerisation - improper dihedral angle zeta (Calpha(before pro)-O1-Cdelta-Calpha)
+zeta13: TORSION ATOMS=5790,5793,5795,5804 NOPBC
+
+#CV30 NUP98 PRO167 isomerisation - torsional angle psi (N1-Calpha-C-N)
+psi13: TORSION ATOMS=5794,5804,5806,5808 NOPBC
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,35 @@
+#this is the master plumed.dat file for metadynamic metainference simulations 
+
+RESTART
+
+# define groups 
+MOLINFO STRUCTURE=../template.pdb
+prot: GROUP ATOMS=1-1039
+WHOLEMOLECULES ENTITY0=prot
+FLUSH STRIDE=1000
+
+#include file with definition of metadynamics CVs
+INCLUDE FILE=../CVs.dat
+
+#activate parallel bias metadynamics 
+PBMETAD ...
+    ARG=helix1.lessthan,helix2.lessthan,helix3.lessthan,helix4.lessthan,helix5.lessthan,helix6.lessthan,helix7.lessthan,zeta,psi,beta,kink,rgyr,hydro,salt
+    HEIGHT=1.2
+    BIASFACTOR=37 #10*SQRT(NUM_OF_CVS)
+    TEMP=310
+    SIGMA=0.05,0.37,0.07,0.07,0.33,0.29,0.10,1.41,0.74,0.32,0.34,0.22,1.51,3.78
+    PACE=500
+    GRID_MIN=-1,-1,-1,-1,-1,-1,-1,-pi,-pi,-1,-1,-1,-1,-1
+    GRID_MAX=500,500,500,500,500,500,500,pi,pi,1000,20,20,1000,1000
+    GRID_SPACING=0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1
+    GRID_WSTRIDE=10000
+    GRID_RFILES=../GRID.helix1.lessthan,../GRID.helix2.lessthan,../GRID.helix3.lessthan,../GRID.helix4.lessthan,../GRID.helix5.lessthan,../GRID.helix6.lessthan,../GRID.helix7.lessthan,../GRID.zeta,../GRID.psi,../GRID.beta,../GRID.kink,../GRID.rgyr,../GRID.hydro,../GRID.salt
+    GRID_WFILES=../GRID.helix1.lessthan,../GRID.helix2.lessthan,../GRID.helix3.lessthan,../GRID.helix4.lessthan,../GRID.helix5.lessthan,../GRID.helix6.lessthan,../GRID.helix7.lessthan,../GRID.zeta,../GRID.psi,../GRID.beta,../GRID.kink,../GRID.rgyr,../GRID.hydro,../GRID.salt
+    FILE=../HILLS/helix1.lessthan,../HILLS/helix2.lessthan,../HILLS/helix3.lessthan,../HILLS/helix4.lessthan,../HILLS/helix5.lessthan,../HILLS/helix6.lessthan,../HILLS/helix7.lessthan,../HILLS/zeta,../HILLS/psi,../HILLS/beta,../HILLS/kink,../HILLS/rgyr,../HILLS/hydro,../HILLS/salt
+    WALKERS_MPI
+    LABEL=pbmetad
+... PBMETAD
+
+#print out relevant info
+PRINT ARG=helix1.lessthan,helix2.lessthan,helix3.lessthan,helix4.lessthan,helix5.lessthan,helix6.lessthan,helix7.lessthan,zeta,psi,beta,kink,rgyr,hydro,salt FILE=../COLVAR/COLVAR_PBMETAD STRIDE=500
+ENDPLUMED
