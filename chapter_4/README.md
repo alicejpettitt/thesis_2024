@@ -1,6 +1,6 @@
 # Biophysical characterisation of ORF6 from SARS-CoV-2 
 
-Scripts used to produce figures in Alice Jane Pettitt's thesis. Submitted September 2024 to University College London. 
+Scripts used to produce figures in Alice Jane Pettitt's thesis. Published November 2024 by University College London. 
 
 I used PLUMED version 2.7.1 and GROMACS 2021.2. 
 
